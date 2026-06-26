@@ -1,9 +1,6 @@
 # CareerFinder 💼
 
 A modern React-based job search application with an improved user interface, advanced filtering, favorites, job details, and responsive design.
-
-This project is being redesigned and extended from an existing React job search application with significant improvements in UI, architecture, and functionality.
-
 ---
 
 ## Features
