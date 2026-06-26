@@ -1,80 +1,145 @@
-import React, { useState } from 'react';
-import useFetchJobs from './useFetchJobs'
-import { Container } from 'react-bootstrap'
-import Job from './Job'
-import JobsPagination from './JobsPagination';
-import SearchForm from './SearchForm';
+import React, { useState } from "react";
+import { Container } from "react-bootstrap";
+
 import Navbar from "./components/Navbar/Navbar";
 import Hero from "./components/Hero/Hero";
 import Footer from "./components/Footer/Footer";
 
+import SearchForm from "./SearchForm";
+import JobsPagination from "./JobsPagination";
+import Job from "./Job";
+import useFetchJobs from "./useFetchJobs";
+
 function App() {
-  const [params, setParams] = useState({})
-  const [page, setPage] = useState(1)
-  const { jobs, loading, error, hasNextPage } = useFetchJobs(params, page)
+  const [params, setParams] = useState({});
+  const [page, setPage] = useState(1);
+
+  const {
+    jobs,
+    loading,
+    error,
+    hasNextPage
+  } = useFetchJobs(params, page);
 
   function handleParamChange(e) {
-    const param = e.target.name
-    const value = e.target.value
-    setPage(1)
-    setParams(prevParams => {
-      return { ...prevParams, [param]: value }
-    })
+    const param = e.target.name;
+
+    const value =
+      e.target.type === "checkbox"
+        ? e.target.checked
+        : e.target.value;
+
+    setPage(1);
+
+    setParams(prev => ({
+      ...prev,
+      [param]: value
+    }));
   }
 
   return (
-  <>
-    <Navbar />
+    <>
 
-    <Hero />
+      <Navbar />
 
-    <Container className="my-5">
+      <Hero />
 
-      <h2 className="mb-4 text-center">
-        Latest Job Opportunities
-      </h2>
+      <Container className="my-5">
 
-      <SearchForm
-        params={params}
-        onParamChange={handleParamChange}
-      />
+        <div className="text-center mb-5">
 
-      <JobsPagination
-        page={page}
-        setPage={setPage}
-        hasNextPage={hasNextPage}
-      />
+          <h2 className="display-5 font-weight-bold">
 
-      {loading && (
-        <h3 className="text-center">
-          Loading Jobs...
-        </h3>
-      )}
+            Latest Opportunities
 
-      {error && (
-        <h3 className="text-danger text-center">
-          Unable to load jobs.
-        </h3>
-      )}
+          </h2>
 
-      {jobs.map(job => (
-        <Job
-          key={job.id}
-          job={job}
+          <p
+            className="text-muted"
+            style={{
+              maxWidth: "700px",
+              margin: "20px auto"
+            }}
+          >
+            Browse the latest software engineering,
+            frontend, backend, internship and remote
+            opportunities from top companies.
+          </p>
+
+        </div>
+
+        <SearchForm
+          params={params}
+          onParamChange={handleParamChange}
         />
-      ))}
 
-      <JobsPagination
-        page={page}
-        setPage={setPage}
-        hasNextPage={hasNextPage}
-      />
+        <JobsPagination
+          page={page}
+          setPage={setPage}
+          hasNextPage={hasNextPage}
+        />
 
-    </Container>
+        {loading && (
 
-    <Footer />
-  </>
-);
+          <div className="text-center my-5">
+
+            <h3>
+
+              Loading Jobs...
+
+            </h3>
+
+          </div>
+
+        )}
+
+        {error && (
+
+          <div
+            className="alert alert-danger text-center"
+          >
+
+            Unable to load jobs.
+
+          </div>
+
+        )}
+
+        {!loading &&
+          !error &&
+          jobs.length === 0 && (
+
+            <div
+              className="alert alert-warning text-center"
+            >
+
+              No jobs found.
+
+            </div>
+
+          )}
+
+        {jobs.map(job => (
+
+          <Job
+            key={job.id}
+            job={job}
+          />
+
+        ))}
+
+        <JobsPagination
+          page={page}
+          setPage={setPage}
+          hasNextPage={hasNextPage}
+        />
+
+      </Container>
+
+      <Footer />
+
+    </>
+  );
 }
 
 export default App;
